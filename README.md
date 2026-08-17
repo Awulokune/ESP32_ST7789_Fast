@@ -1,42 +1,29 @@
 # ESP32_ST7789_Fast
 
-Fast ST7789 SPI display library for ESP32.
+ESP32 port of **Arduino_ST7789_Fast** for ST7789 SPI displays. AVR-specific SPI registers and inline assembly were replaced with the ESP32 Arduino SPI API while preserving the original API and RGB565 drawing behavior.
 
-## Installation
+## Default configuration
+- MOSI: GPIO 23
+- SCLK: GPIO 18
+- DC: GPIO 2
+- RST: GPIO 4
+- CS: -1
+- Backlight: GPIO 15 (controlled by sketch)
+- SPI mode: MODE3
+- SPI clock: 27 MHz
 
-Arduino IDE → Library Manager → search for:
-
-ESP32_ST7789_Fast
-
-Or download this repository as ZIP.
-
-## Basic Example
-
+## Example
 ```cpp
 #include <ESP32_ST7789_Fast.h>
-
-#define TFT_DC  2
-#define TFT_RST 4
-#define TFT_CS  -1
-#define TFT_SCLK 18
-#define TFT_MOSI 23
-#define TFT_BL  15
-
-ESP32_ST7789_Fast tft(TFT_DC, TFT_RST, TFT_CS, TFT_SCLK, TFT_MOSI);
-
+ESP32_ST7789_Fast tft(2, 4, -1, 18, 23);
 void setup() {
-    pinMode(TFT_BL, OUTPUT);
-    digitalWrite(TFT_BL, HIGH);
-
-    tft.init();
-    tft.setRotation(0);
-    tft.fillScreen(BLACK);
-
-    tft.setTextColor(WHITE);
-    tft.setTextSize(2);
-    tft.setCursor(20, 20);
-    tft.println("AWULOKUNE");
+  pinMode(15, OUTPUT);
+  digitalWrite(15, HIGH);
+  tft.init();
+  tft.fillScreen(BLACK);
+  tft.fillRect(20, 20, 100, 50, BLUE);
 }
+void loop() {}
+```
 
-void loop() {
-}
+Adafruit_GFX remains a dependency for the inherited text/graphics API.
